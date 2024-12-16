@@ -95,6 +95,12 @@ def get_optimizer(
         if 'warmup_init' not in optimizer_params:
             optimizer_params['warmup_init'] = False
         optimizer = Adafactor(params, lr=float(learning_rate), eps=1e-6, **optimizer_params)
+    elif lower_type == 'ranger21':
+        try:
+            from pytorch_optimizer import Ranger21
+            optimizer = Ranger21(params, lr=learning_rate, **optimizer_params)
+        except ImportError:
+            raise ImportError("Please install pytorch_optimizer to use Ranger21 optimizer -> pip install pytorch_optimizer")
     elif lower_type == 'automagic':
         from toolkit.optimizers.automagic import Automagic
         optimizer = Automagic(params, lr=float(learning_rate), **optimizer_params)
